@@ -24,8 +24,8 @@ class UserController extends Controller
 
                 ->addColumn('action', function ($user) {
                     return  '
-                        <a href="' . route('users.edit', $user->id) . '" class="btn btn-primary btn-sm">Edit</a>
-                        <a data-id="' . $user->id . '" href="' . route('users.destroy', $user->id) . '"  class="btn btn-danger btn-sm  ">Delete</a>
+                        <button data-id="'.$user->id.'"   href="' . route('users.edit', $user->id) . '" class="btn btn-primary btn-sm user-edit">Edit</button>
+                        <button data-id="'.$user->id.'" href="' . route('users.destroy', $user->id) . '"  class="btn btn-danger btn-sm  user-delete ">Delete</button>
                     ';
                 })
 
@@ -38,18 +38,13 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        dd($user);
         return response()->json($user);
     }
 
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        if ($user) {
-            $user->delete();
-            return response()->json(['status'=>'success','message' => 'User deleted successfully.']);
-        } else {
-            return response()->json(['status'=>'failed','message' => 'User not found.'], 404);
-        }
+        $user->delete();
+        return response()->json(['status' => 'success', 'message' => 'User deleted successfully']);
     }
 }

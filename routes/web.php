@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('user.index');
-    Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
-    Route::get('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/', 'index')->name('user.index');
+    Route::get('/users/edit/{id}', 'edit')->name('users.edit');
+    Route::delete('/users/destroy/{id}', 'destroy')->name('users.destroy');
 });

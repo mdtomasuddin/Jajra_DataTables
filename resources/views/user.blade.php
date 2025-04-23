@@ -37,7 +37,7 @@
                             </tr>
                         </thead>
 
-                 
+
                     </table>
                 </div>
             </div>
@@ -46,49 +46,71 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script type="text/javascript">
-      const table=  $(document).ready(function () {
+        const table = $(document).ready(function() {
             $('#data').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('user.index') }}",
-                columns: [
-                    { data: 'id', name: 'id', searchable: false },
-                    { data: 'name', name: 'name' },
-                    { data: 'email', name: 'email' },
-                    { data: 'phone', name: 'phone' },
-                    { data: 'created_at', name: 'created_at' },
-                    { data: 'updated_at', name: 'updated_at' },
-                    { data: 'action', name: 'action' ,orderable: false, searchable: false }
+                columns: [{
+                        data: 'id',
+                        name: 'id',
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'phone',
+                        name: 'phone'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    }
                 ]
             });
 
-            $('table').on("click",".delete-user",function(){
+            $('table').on("click", ".user-delete", function() {
                 const UserId = $(this).data('id');
-            
-                if(UserId){
-                    if(confirm('Are you sure you want to delete this user ?')){
-                        $.ajax({
-                            url: `{{ url('/users/destroy') }}/${UserId}`,
-                            method: 'get',
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                            },
-                            success: function (response) {
-                                if(response.status === 'success') {
-                                    table.ajax.reload(null,false);
-                                } else {
-                                    alert(response.message);
-                                }
-                            },
-                            error: function (error) {
-                                alert("something went wrong!");
+                if (UserId && confirm('Are you sure you want to delete this user?')) {
+                    $.ajax({
+                        url: `/users/destroy/${UserId}`,
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            _method: "DELETE" // Laravel-এ সঠিক মেথডের জন্য
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                location.reload(); // বা table.ajax.reload()
+                            } else {
+                                alert(response.message);
                             }
-                        });
-                    }
+                        },
+                        error: function(xhr) {
+                            alert("Error: " + xhr.responseJSON.message);
+                        }
+                    });
                 }
             });
         });
